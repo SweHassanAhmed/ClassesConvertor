@@ -1,0 +1,15 @@
+{
+  "name": "classconvertor",
+  "version": "1.0.0",
+  "description": "to convert classes from .net core to angular 2 ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "HassanAhmed",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
