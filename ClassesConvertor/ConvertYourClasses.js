@@ -145,11 +145,12 @@ export default class ConvertYourClasses {
 
     emptyDestination(path) {
         fs.readdir(path, (err, fileNames) => {
-            console.log(fileNames);
-            fileNames.forEach(a => {
-                var filePath = `${path}/${a}`;
-                fs.unlink(filePath, () => {});
-            });
+            if (fileNames instanceof Array) {
+                fileNames.forEach(a => {
+                    var filePath = `${path}/${a}`;
+                    fs.unlink(filePath, () => {});
+                });
+            }
         });
     }
 
