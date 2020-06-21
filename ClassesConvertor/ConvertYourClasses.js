@@ -38,8 +38,6 @@ export default class ConvertYourClasses {
             if (a && this.indexForChangeDataType2 < this.filesWithTheDataType.length) {
                 this.changeDataTypeForFile2(this.filesWithTheDataType[this.indexForChangeDataType2]);
                 this.indexForChangeDataType2++;
-            } else if (a && this.indexForChangeDataType2 >= this.filesWithTheDataType.length) {
-                //console.log(`Final Done.`);
             }
         });
 
@@ -48,7 +46,6 @@ export default class ConvertYourClasses {
     }
 
     changeDataTypeForFile2 = (fileWithData) => {
-        //console.log(fileWithData);
         var newLineNumber = 1;
         var newContent = "";
         var arrayOfClassesAdded = [];
@@ -87,10 +84,12 @@ export default class ConvertYourClasses {
         });
 
         function addToArray(object) {
-            if (arrayOfClassesAdded.findIndex(v => v.className == object.className) == -1) {
+            if (arrayOfClassesAdded.findIndex(v => v.className == object.className) == -1 &&
+                fileWithData.fileName != object.fileName) {
                 arrayOfClassesAdded.push(object);
             }
         }
+
     }
 
     addToFile = (content, fileName) => {
@@ -101,7 +100,6 @@ export default class ConvertYourClasses {
         var oldArray = {};
         oldArray = Object.assign({}, this.filesWithTheDataType);
         this.filesWithTheDataType = [];
-        //console.log(oldArray);
         for (const property in oldArray) {
             if (oldArray[property].numbersOfLine.length > 0) {
                 this.filesWithTheDataType.push({
@@ -110,8 +108,6 @@ export default class ConvertYourClasses {
                 });
             }
         }
-
-        //console.log("WWW", this.filesWithTheDataType);
 
         this.AvailableDataTypes = this.changeToDataType(this.globalFileNames);
         this.changeDataTypeSubject2.next(true);
@@ -224,8 +220,6 @@ export default class ConvertYourClasses {
 
         var lineNumber = 1;
         lineReader.eachLine(`${this.toDir}/${fileName}`, (line, last) => {
-            // console.log(lineNumber);
-            // console.log(line);
             if (line.includes(`//*//`)) {
                 this.filesWithTheDataType[fileName].numbersOfLine.push(lineNumber);
             }
@@ -241,9 +235,7 @@ export default class ConvertYourClasses {
     // Main Function Of The Application
     readFromDirectory = () => {
         fs.readdir(this.dirPath, (err, fileName) => {
-            if (err) {
-                console.log(err);
-            }
+            if (err) {}
 
             this.files = new Array();
             this.files = fileName;

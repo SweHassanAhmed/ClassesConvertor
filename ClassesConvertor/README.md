@@ -9,18 +9,16 @@ except for the DBContext file
 
 ## Installation
 ```bash
-npm install classesconvertor
+npm install classesconvertor3
 ```
 
 In Your Javascript File 
 ```javascript
-import ConvertYourClasses from "classesconvertor/ConvertYourClasses.js";
-.
-.
-.
-var from = "From File Path";
-var to = "To File Path";
-new ConvertYourClasses(from, to);
+import ConvertYourClasses from "classesconvertor3/ConvertYourClasses.js";
+
+var fromPath = "";
+var toPath = "";
+new ConvertYourClasses(fromPath, toPath);
 ```
 
 ## Contributing

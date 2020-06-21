@@ -92,7 +92,6 @@ export default class ClassConvertor {
 
         var newLine = `\n\tpublic ${propertyName}: ${dataType.dataType};`;
 
-
         if (dataType.originalDataType != undefined) {
             newLine += `\t//*//${dataType.originalDataType}`;
         }
@@ -184,7 +183,13 @@ export default class ClassConvertor {
 
     gettingVariableData = (line) => {
         var index = line.indexOf('public ');
-        var firstIndexOfDataType = index + 7;
+
+        var numberOfIndexes = 7;
+        if (line.includes(`public virtual `)) {
+            numberOfIndexes = 15;
+        }
+
+        var firstIndexOfDataType = index + numberOfIndexes;
         var spaceIndexAfterDataType = line.indexOf(' ', firstIndexOfDataType);
         var dataType = line.slice(firstIndexOfDataType, spaceIndexAfterDataType);
 
@@ -256,7 +261,10 @@ export default class ClassConvertor {
         } else if (
             _dataType.includes(`List<`) ||
             _dataType.includes(`IList<`) ||
-            _dataType.includes(`IEnumerable<`)
+            _dataType.includes(`IEnumerable<`) ||
+            _dataType.includes(`ICollection<`) ||
+            _dataType.includes(`DbSet<`) ||
+            _dataType.includes(`HashSet<`)
         ) {
             dataType = `Array<any>`;
             initalize = true;
@@ -278,10 +286,6 @@ export default class ClassConvertor {
             initalize = true;
             originalDataType = this.gettingDataTypeFromArray(_dataType);
         }
-
-        // if (originalDataType == undefined) {
-        //     originalDataType = _dataType;
-        // }
 
         return {
             dataType,
