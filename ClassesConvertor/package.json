@@ -1,15 +1,23 @@
 {
-  "name": "classconvertor",
+  "name": "classesconvertor",
   "version": "1.0.0",
   "description": "to convert classes from .net core to angular 2 ",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
   },
-  "author": "HassanAhmed",
+  "author": "Hassan Ahmed",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "es6": "0.0.7",
+    "fs-extra": "^9.0.1",
+    "line-reader": "^0.4.0",
+    "rxjs": "^6.5.5",
+    "save": "^2.4.0"
   }
 }
