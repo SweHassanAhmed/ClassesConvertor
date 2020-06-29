@@ -14,7 +14,7 @@ npm install classesconvertor3
 
 In Your Javascript File 
 ```javascript
-import ConvertYourClasses from "classconvertor/ConvertYourClasses.js";
+import ConvertYourClasses from "dotnetclassconvertor/ConvertYourClasses.js";
 
 var fromPath = "toDir" // Required;
 var toPath = undefined;
