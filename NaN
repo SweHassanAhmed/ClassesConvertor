@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Data.Models
+{
+    public partial class AbsenceDetailsView
+    {
+        public int ADID { get; set; }
+        public int? DayTurn { get; set; }
+        public bool? IsGeneral { get; set; }
+        public int? SettingID { get; set; }
+        public int? DiscountTypeID { get; set; }
+        public int? ComID { get; set; }
+    }

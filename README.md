@@ -14,12 +14,19 @@ npm install classesconvertor3
 
 In Your Javascript File 
 ```javascript
-import ConvertYourClasses from "classesconvertor3/ConvertYourClasses.js";
+import ConvertYourClasses from "classconvertor/ConvertYourClasses.js";
 
-var fromPath = "";
-var toPath = "";
-new ConvertYourClasses(fromPath, toPath);
+var fromPath = "toDir" // Required;
+var toPath = undefined;
+new ConvertYourClasses(fromPath, toPath, true);
 ```
+
+the first parameter is the destination file 
+the second optional parameter is the destination where new typescript file will be stored
+    with deafult value to ./DefaultDirectory
+the third optional parameter if the model files has more than one class in single file
+TRUE  --> May be files have some multiple classes
+FALSE --> Every file has its own class 
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

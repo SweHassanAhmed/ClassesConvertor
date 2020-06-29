@@ -2,9 +2,43 @@ import ClassConvertor from "./ClassConvertor.js";
 import rxjs from "rxjs";
 import fs from "fs-extra";
 import lineReader from "line-reader";
+import fswin from 'fswin';
 
 export default class ConvertYourClasses {
-    constructor(dirPath, outSideToDir) {
+    constructor(dirPath, outSideToDir, seperateFiles) {
+        this.seperateFilesVal = seperateFiles;
+        this.destinationFileFound = fs.existsSync(dirPath);
+
+        if (this.destinationFileFound) {
+            this.fillData(dirPath, outSideToDir);
+            if (this.seperateFilesVal) {
+                this.seperateFiles();
+            } else {
+                this.readFromDirectory();
+            }
+        } else {
+            console.log('%cDestination File Not Found.', 'background: #222; color: #bada55');
+        }
+    }
+
+    saveToFile(path, fileName, content, numberOfFile) {
+        var newFileName = fileName;
+        if (numberOfFile) {
+            newFileName = fileName.replace('.cs', `${numberOfFile}.cs`);
+        }
+
+        if (!fs.existsSync(path)) {
+            fs.mkdir(path);
+        }
+
+        fswin.setAttributesSync(path, {
+            IS_HIDDEN: true
+        });
+
+        fs.writeFile(`${path}/${newFileName}`, content, () => {});
+    }
+
+    fillData(dirPath, outSideToDir) {
         this.dirPath = dirPath;
         this.toDir = undefined;
 
@@ -29,6 +63,9 @@ export default class ConvertYourClasses {
                 this.indexForChangeDataType++;
             } else if (a && this.indexForChangeDataType >= this.globalFileNames.length) {
                 this.startConvertDataType();
+                if (this.seperateFilesVal) {
+                    fs.remove(this.dirPath, err => {})
+                }
             }
         })
 
@@ -42,7 +79,52 @@ export default class ConvertYourClasses {
         });
 
         this.filesWithTheDataType = {};
-        this.readFromDirectory();
+    }
+
+    seperateFiles() {
+        this.toTempDirSubject = new rxjs.BehaviorSubject(false);
+        this.toTempDirArray = new Array();
+        this.toTempDirIndex = 0;
+        var myNewDir = `MyNewDirectory`;
+        this.toTempDirSubject.subscribe(a => {
+            if (a) {
+                var fileName = this.toTempDirArray[this.toTempDirIndex];
+                var wholeBodyOfFile = ``;
+                var numberOfFiles = 0;
+                lineReader.eachLine(`${this.dirPath}/${fileName}`, (line, last) => {
+                    if (line.includes(` class `)) {
+                        numberOfFiles++;
+                        if (numberOfFiles > 1) {
+                            this.saveToFile(`${this.dirPath}/${myNewDir}`, fileName, wholeBodyOfFile, numberOfFiles);
+                            wholeBodyOfFile = ``;
+                        }
+                    }
+
+                    if (last) {
+                        this.saveToFile(`${this.dirPath}/${myNewDir}`, fileName, wholeBodyOfFile);
+                    }
+
+                    wholeBodyOfFile += `${line}\n`;
+                    if (last) {
+                        this.toTempDirIndex++;
+
+                        if (this.toTempDirIndex != this.toTempDirArray.length) {
+                            this.toTempDirSubject.next(true);
+                        } else {
+                            this.dirPath = `${this.dirPath}/${myNewDir}`;
+                            this.readFromDirectory();
+                        }
+                    }
+                });
+            }
+        });
+
+        if (this.destinationFileFound) {
+            fs.readdir(this.dirPath, (err, fileNames) => {
+                this.toTempDirArray.push(...(fileNames.filter(a => a.endsWith(`.cs`))));
+                this.toTempDirSubject.next(true);
+            });
+        }
     }
 
     changeDataTypeForFile2 = (fileWithData) => {
@@ -167,7 +249,6 @@ export default class ConvertYourClasses {
         }
 
         if (this.numberOfFileServed == this.numberOfFiles) {
-            //this.reAddingClassNames();
             this.changeDataTypeSubject.next(true);
         }
     }
@@ -234,13 +315,15 @@ export default class ConvertYourClasses {
 
     // Main Function Of The Application
     readFromDirectory = () => {
-        fs.readdir(this.dirPath, (err, fileName) => {
-            if (err) {}
+        if (this.destinationFileFound) {
+            fs.readdir(this.dirPath, (err, fileName) => {
+                if (err) {}
 
-            this.files = new Array();
-            this.files = fileName;
-            this.scanFilesFromArray();
-        });
+                this.files = new Array();
+                this.files = fileName;
+                this.scanFilesFromArray();
+            });
+        }
     }
 
     scanFilesFromArray() {
