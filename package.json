@@ -1,5 +1,5 @@
 {
-  "name": "classesconvertorver3",
+  "name": "classconvertor",
   "version": "1.0.0",
   "description": "to convert classes from .net core to angular 2 ",
   "main": "index.js",
