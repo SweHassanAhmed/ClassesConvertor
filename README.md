@@ -2,32 +2,28 @@
 
 Class Convertor is a nodejs based library for converting classess from .net into angular 8(typescript code)
 
-## Requirement
-Each class must be in seprate file
-the upload models from .net/.net core EF is perfect for use
-except for the DBContext file
-
 ## Installation
 ```bash
-npm install classesconvertor3
+npm install dotnetcoreconvertor
 ```
 
 In Your Javascript File 
 ```javascript
-import ConvertYourClasses from "dotnetclassconvertor/ConvertYourClasses.js";
+import ConvertYourClasses from "dotnetcoreconvertor/ConvertYourClasses.js";
 
-var fromPath = "toDir" // Required;
-var toPath = undefined;
-new ConvertYourClasses(fromPath, toPath, true);
+var pathArray = [];
+pathArray.push("C:/Users/EGMastersDeveloper1/source/Model1")
+pathArray.push("C:/Users/EGMastersDeveloper1/source/Model2")
+pathArray.push("C:/Users/EGMastersDeveloper1/source/Model3")
+
+new ConvertYourClasses(pathArray, "C:/Users/EGMastersDeveloper1/source/UnitedModels");
 ```
 
-the first parameter is the destination file 
-the second optional parameter is the destination where new typescript file will be stored
-    with deafult value to ./DefaultDirectory
-the third optional parameter if the model files has more than one class in single file
-TRUE  --> May be files have some multiple classes
-FALSE --> Every file has its own class 
+the first argument containing pathes of the models that you want to upload.
+the second one is the destination. if left undefined it will create DefaultFolder in the same project
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+https://github.com/SweHassanAhmed/ClassesConvertor.git
 
