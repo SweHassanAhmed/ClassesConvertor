@@ -1,5 +1,8 @@
 import ConvertYourClasses from "./ConvertYourClasses.js";
 
-var fromPath = "F:/ERPSystem/BackEnd/Data/Models";
-var toPath = undefined;
-new ConvertYourClasses(fromPath, toPath, true);
+var pathArray = [];
+pathArray.push("C:/Users/EGMastersDeveloper1/source/Model1")
+pathArray.push("C:/Users/EGMastersDeveloper1/source/Model2")
+pathArray.push("C:/Users/EGMastersDeveloper1/source/Model3")
+
+new ConvertYourClasses(pathArray, "C:/Users/EGMastersDeveloper1/source/UnitedModels");

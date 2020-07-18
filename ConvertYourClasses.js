@@ -5,20 +5,46 @@ import lineReader from "line-reader";
 import fswin from 'fswin';
 
 export default class ConvertYourClasses {
-    constructor(dirPath, outSideToDir, seperateFiles) {
-        this.seperateFilesVal = seperateFiles;
-        this.destinationFileFound = fs.existsSync(dirPath);
+
+    constructor(arrayOfDestinations, toPath) {
+
+        arrayOfDestinations = arrayOfDestinations.filter(a => fs.existsSync(a));
+
+        this.destinationFileFound = arrayOfDestinations.length > 0;
 
         if (this.destinationFileFound) {
-            this.fillData(dirPath, outSideToDir);
+            this.prepareDestination(toPath);
+            this.uniteFiles(arrayOfDestinations);
+
+            this.seperateFilesVal = true;
+
+            this.fillData(this.dirPath, toPath);
             if (this.seperateFilesVal) {
                 this.seperateFiles();
             } else {
                 this.readFromDirectory();
             }
         } else {
-            console.log('%cDestination File Not Found.', 'background: #222; color: #bada55');
+            console.log('%cAll Destination File Not Found.', 'background: #222; color: #bada55');
         }
+    }
+
+    uniteFiles(pathArray) {
+        this.tempToDir = `${this.toDir}/CustomTemp`;
+        fs.mkdir(this.tempToDir, () => {});
+        fswin.setAttributesSync(this.tempToDir, {
+            IS_HIDDEN: true
+        });
+        for (let index = 0; index < pathArray.length; index++) {
+            var files = fs.readdirSync(pathArray[index]);
+            files.forEach(file => {
+                var sourceFile = `${pathArray[index]}/${file}`;
+                var destFile = `${this.tempToDir}/${file}`;
+                fs.copyFileSync(sourceFile, destFile);
+            });
+        }
+
+        this.dirPath = this.tempToDir;
     }
 
     saveToFile(path, fileName, content, numberOfFile) {
@@ -38,8 +64,7 @@ export default class ConvertYourClasses {
         fs.writeFile(`${path}/${newFileName}`, content, () => {});
     }
 
-    fillData(dirPath, outSideToDir) {
-        this.dirPath = dirPath;
+    prepareDestination(outSideToDir) {
         this.toDir = undefined;
 
         if (outSideToDir == undefined) {
@@ -50,7 +75,9 @@ export default class ConvertYourClasses {
 
         this.checkDir(this.toDir);
         this.emptyDestination(this.toDir);
+    }
 
+    fillData() {
         this.globalDataTypes = new Array();
         this.globalFileNames = new Array();
         this.numberOfFileServed = 0;
@@ -65,6 +92,7 @@ export default class ConvertYourClasses {
                 this.startConvertDataType();
                 if (this.seperateFilesVal) {
                     fs.remove(this.dirPath, err => {})
+                    fs.remove(this.tempToDir, err => {});
                 }
             }
         })
